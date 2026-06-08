@@ -12,4 +12,14 @@ export interface VideoDetails {
     title: string;
     description: string;
     thumbnail_720_url: string;
+    duration: number;
+    created_time: number;
+    channel: string;
+    owner: string
+}
+
+export interface Creator {
+    id: string;
+    screenname: string;
+    avatar_360_url: string;
 }
