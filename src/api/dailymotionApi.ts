@@ -1,4 +1,4 @@
-import type { Video } from "../types/video";
+import type { Video, VideoDetails } from "../types/video";
 
 const BASE_URL = "https://api.dailymotion.com";
 
@@ -20,4 +20,17 @@ export async function searchVideos(
     const data = await response.json();
 
     return data.list;
+}
+export async function getVideo(
+    id: string,
+): Promise<VideoDetails> {
+    const response = await fetch(
+        `https://api.dailymotion.com/video/${id}?fields=id,title,description,thumbnail_720_url`
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch video");
+    }
+
+    return response.json();
 }
