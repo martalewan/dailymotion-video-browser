@@ -12,17 +12,33 @@ test("renders video title, thumbnail and link", () => {
                     id: "x123",
                     title: "Test video",
                     thumbnail_360_url: "https://example.com/thumb.jpg",
+                    duration: 94,
+                    created_time: 1231865671,
+                    channel: "fun",
                 }}
             />
-        </MemoryRouter>,
+        </MemoryRouter>
     );
 
-    expect(screen.getByRole("heading", { name: /test video/i })).toBeInTheDocument();
+    expect(
+        screen.getByRole("heading", {
+            name: /test video/i,
+        })
+    ).toBeInTheDocument();
 
-    expect(screen.getByRole("img", { name: /test video/i })).toHaveAttribute(
+    expect(
+        screen.getByRole("img", {
+            name: /test video/i,
+        })
+    ).toHaveAttribute(
         "src",
-        "https://example.com/thumb.jpg",
+        "https://example.com/thumb.jpg"
     );
 
-    expect(screen.getByRole("link")).toHaveAttribute("href", "/video/x123");
+    expect(
+        screen.getByRole("link")
+    ).toHaveAttribute(
+        "href",
+        "/video/x123"
+    );
 });

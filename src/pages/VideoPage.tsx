@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+
 import { getVideo } from "../api/dailymotionApi";
 import LikeButton from "../components/LikeButton";
 import LoadingState from "../components/LoadingState";
@@ -27,7 +28,9 @@ export default function VideoPage() {
     }
 
     if (error) {
-        return <ErrorState message="Something went wrong while loading this video." />;
+        return (
+            <ErrorState message="Something went wrong while loading this video." />
+        );
     }
 
     if (!video) {
@@ -35,22 +38,49 @@ export default function VideoPage() {
     }
 
     return (
-        <main>
-            <Link to="/">← Back to search</Link>
+        <main className="min-h-screen bg-background text-text-primary">
+            <section className="mx-auto max-w-5xl px-5 py-8">
+                <Link
+                    to="/"
+                    className="mb-6 inline-flex text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
+                >
+                    ← Back to search
+                </Link>
 
-            <iframe
-                src={`https://www.dailymotion.com/embed/video/${video.id}`}
-                title={video.title}
-                width="100%"
-                height="400"
-                allow="autoplay; fullscreen"
-            />
+                <div className="overflow-hidden rounded-2xl bg-black">
+                    <iframe
+                        src={`https://www.dailymotion.com/embed/video/${video.id}`}
+                        title={video.title}
+                        className="aspect-video w-full"
+                        allow="fullscreen; picture-in-picture; web-share"
+                    />
+                </div>
 
-            <h1>{video.title}</h1>
+                <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+                            {video.title}
+                        </h1>
+                    </div>
 
-            <LikeButton isLiked={isLiked} onToggle={toggleLike} />
+                    <LikeButton
+                        isLiked={isLiked}
+                        onToggle={toggleLike}
+                    />
+                </div>
 
-            <p>{video.description}</p>
+                {video.description && (
+                    <div className="mt-6 rounded-2xl bg-surface p-5">
+                        <h2 className="mb-2 text-sm font-medium text-text-primary">
+                            Description
+                        </h2>
+
+                        <p className="text-sm leading-6 text-text-secondary">
+                            {video.description}
+                        </p>
+                    </div>
+                )}
+            </section>
         </main>
     );
 }

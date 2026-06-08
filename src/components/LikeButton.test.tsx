@@ -4,13 +4,37 @@ import userEvent from "@testing-library/user-event";
 
 import LikeButton from "./LikeButton";
 
-test("calls onToggle when the user clicks the like button", async () => {
+test("calls onToggle when clicked", async () => {
     const user = userEvent.setup();
     const handleToggle = vi.fn();
 
-    render(<LikeButton isLiked={false} onToggle={handleToggle} />);
+    render(
+        <LikeButton
+            isLiked={false}
+            onToggle={handleToggle}
+        />
+    );
 
-    await user.click(screen.getByRole("button", { name: /like video/i }));
+    await user.click(
+        screen.getByRole("button", {
+            name: /like video/i,
+        })
+    );
 
     expect(handleToggle).toHaveBeenCalledTimes(1);
+});
+
+test("shows correct accessible label when liked", () => {
+    render(
+        <LikeButton
+            isLiked
+            onToggle={() => { }}
+        />
+    );
+
+    expect(
+        screen.getByRole("button", {
+            name: /unlike video/i,
+        })
+    ).toBeInTheDocument();
 });
