@@ -26,6 +26,7 @@ export default function LikeButton({
                     transition-all
                     duration-200
                     focus-ring
+                    cursor-pointer
                     ${isLiked
                     ? "gradient-brand text-text-primary"
                     : "border border-border bg-surface text-text-primary hover:bg-background"
