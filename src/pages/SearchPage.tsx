@@ -3,6 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { searchVideos } from "../api/dailymotionApi";
 import useDebounce from "../hooks/useDebounce";
 import VideoCard from "../components/VideoCard";
+import LoadingState from "../components/LoadingState";
+import ErrorState from "../components/ErrorState";
+import EmptyState from "../components/EmptyState";
 
 export default function SearchPage() {
     const [query, setQuery] = useState("dogs");
@@ -19,9 +22,19 @@ export default function SearchPage() {
         enabled: debouncedQuery.trim().length > 0,
     });
 
+    if (isLoading) {
+        return <LoadingState message="Loading videos..." />;
+    }
+
+    if (error) {
+        return (
+            <ErrorState message="Something went wrong while loading videos." />
+        );
+    }
+
     return (
         <main>
-            <h1>Search Page</h1>
+            <h1>Dailymotion Video Browser</h1>
 
             <input
                 type="text"
@@ -30,18 +43,20 @@ export default function SearchPage() {
                 placeholder="Search videos..."
             />
 
-            {isLoading && <p>Loading...</p>}
-
-            {error && <p>Something went wrong.</p>}
-
-            <section>
-                {videos?.map((video) => (
-                    <VideoCard
-                        key={video.id}
-                        video={video}
-                    />
-                ))}
-            </section>
+            {!videos?.length ? (
+                <EmptyState
+                    message={`No videos found for "${debouncedQuery}".`}
+                />
+            ) : (
+                <section>
+                    {videos.map((video) => (
+                        <VideoCard
+                            key={video.id}
+                            video={video}
+                        />
+                    ))}
+                </section>
+            )}
         </main>
     );
 }
