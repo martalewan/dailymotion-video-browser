@@ -22,13 +22,26 @@ const VIDEO_DETAILS_FIELDS = [
     "owner",
 ].join(",");
 
+export function buildApiUrl(path: string, params: Record<string, string | number>) {
+    const url = new URL(path, BASE_URL);
+
+    Object.entries(params).forEach(([key, value]) => {
+        url.searchParams.set(key, String(value));
+    });
+
+    return url.toString();
+}
+
 export async function searchVideos(query: string): Promise<Video[]> {
     if (!query.trim()) {
         return [];
     }
-
     const response = await fetch(
-        `${BASE_URL}/videos?search=${encodeURIComponent(query)}&fields=${VIDEO_LIST_FIELDS}&limit=12`,
+        buildApiUrl("/videos", {
+            search: query,
+            fields: VIDEO_LIST_FIELDS,
+            limit: 12,
+        }),
     );
 
     if (!response.ok) {
