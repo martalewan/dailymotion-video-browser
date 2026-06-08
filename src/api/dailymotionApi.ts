@@ -10,7 +10,9 @@ export async function searchVideos(
     }
 
     const response = await fetch(
-        `${BASE_URL}/videos?search=${encodeURIComponent(query)}&fields=id,title,thumbnail_360_url&limit=12`,
+        `${BASE_URL}/videos?search=${encodeURIComponent(
+            query
+        )}&fields=id,title,thumbnail_360_url,duration,created_time,channel&limit=12`,
     );
 
     if (!response.ok) {

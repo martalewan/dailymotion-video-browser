@@ -2,6 +2,9 @@ export interface Video {
     id: string;
     title: string;
     thumbnail_360_url: string;
+    duration: number;
+    created_time: number;
+    channel: string;
 }
 
 export interface VideoDetails {
