@@ -27,6 +27,7 @@ export default function SearchPage() {
         queryKey: ["videos", debouncedQuery],
         queryFn: () => searchVideos(debouncedQuery),
         enabled: debouncedQuery.trim().length > 0,
+        staleTime: 1000 * 60 * 5,
     });
 
     if (error) {
@@ -54,10 +55,18 @@ export default function SearchPage() {
                     </Link>
 
                     <div className="relative flex-1">
+                        <label
+                            htmlFor="video-search"
+                            className="sr-only"
+                        >
+                            Search videos
+                        </label>
+
                         <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-text-secondary" />
 
                         <input
-                            type="text"
+                            id="video-search"
+                            type="search"
                             value={query}
                             onChange={(event) => setQuery(event.target.value)}
                             placeholder="Search videos..."
@@ -123,7 +132,9 @@ export default function SearchPage() {
                             />
                         ))}
                     </section>
-                ) : null}
+                ) : (
+                    <EmptyState message="Search for a topic, creator, or video title to get started." />
+                )}
             </section>
         </main>
     );

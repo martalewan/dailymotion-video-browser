@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -31,19 +31,26 @@ export default function VideoPage() {
         queryKey: ["video", id],
         queryFn: () => getVideo(id!),
         enabled: Boolean(id),
+        staleTime: 1000 * 60 * 5,
     });
 
     const { data: nextVideos, isLoading: isLoadingRelatedVideos } = useQuery({
         queryKey: ["channel-videos", video?.channel],
         queryFn: () => getChannelVideos(video!.channel),
         enabled: Boolean(video?.channel),
+        staleTime: 1000 * 60 * 5,
     });
 
     const { data: creator } = useQuery({
         queryKey: ["creator", video?.owner],
         queryFn: () => getCreator(video!.owner),
         enabled: Boolean(video?.owner),
+        staleTime: 1000 * 60 * 5,
     });
+
+    useEffect(() => {
+        setIsExpanded(false);
+    }, [id]);
 
     if (error) {
         return (
@@ -108,6 +115,8 @@ export default function VideoPage() {
 
     const shouldShowDescriptionToggle = description.length > 250;
 
+    const creatorInitial = creator?.screenname?.charAt(0).toUpperCase();
+
     return (
         <main className="min-h-screen bg-background text-text-primary">
             <section className="mx-auto max-w-[1600px] px-5 py-8">
@@ -125,7 +134,7 @@ export default function VideoPage() {
                                 src={`https://www.dailymotion.com/embed/video/${video.id}`}
                                 title={video.title}
                                 className="aspect-video w-full"
-                                allow="fullscreen; picture-in-picture; web-share"
+                                allow="fullscreen; web-share"
                             />
                         </div>
 
@@ -137,11 +146,18 @@ export default function VideoPage() {
 
                                 {creator ? (
                                     <div className="mt-4 flex items-center gap-3">
-                                        <img
-                                            src={creator.avatar_360_url}
-                                            alt={creator.screenname}
-                                            className="h-10 w-10 rounded-full object-cover"
-                                        />
+                                        {creator.avatar_360_url ? (
+                                            <img
+                                                src={creator.avatar_360_url}
+                                                alt={creator.screenname}
+                                                loading="lazy"
+                                                className="h-10 w-10 rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-skeleton text-sm font-semibold text-text-secondary">
+                                                {creatorInitial}
+                                            </div>
+                                        )}
 
                                         <div>
                                             <p className="text-sm font-medium text-text-primary">
@@ -223,7 +239,11 @@ export default function VideoPage() {
                                     />
                                 ))}
                             </div>
-                        ) : null}
+                        ) : (
+                            <p className="text-sm text-text-secondary">
+                                No related videos found.
+                            </p>
+                        )}
                     </aside>
                 </div>
             </section>

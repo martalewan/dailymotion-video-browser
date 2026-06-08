@@ -14,19 +14,35 @@ export default function RelatedVideoCard({
     return (
         <Link
             to={`/video/${video.id}`}
-            className="block"
+            className="
+                block
+                rounded-xl
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-brand-purple
+                focus-visible:ring-offset-2
+            "
         >
             <article className="flex gap-3 rounded-xl p-2 hover:bg-surface">
-                <div className="relative h-20 w-36 shrink-0 overflow-hidden rounded-lg">
-                    <img
-                        src={video.thumbnail_360_url}
-                        alt={video.title}
-                        className="h-full w-full object-cover"
-                    />
+                <div className="relative h-20 w-36 shrink-0 overflow-hidden rounded-lg bg-skeleton">
+                    {video.thumbnail_360_url ? (
+                        <img
+                            src={video.thumbnail_360_url}
+                            alt={video.title}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs text-text-secondary">
+                            No thumbnail
+                        </div>
+                    )}
 
-                    <span className="absolute bottom-1 right-1 rounded bg-black/75 px-1.5 py-0.5 text-[10px] text-white">
-                        {formatDuration(video.duration)}
-                    </span>
+                    {video.duration ? (
+                        <span className="absolute bottom-1 right-1 rounded bg-black/75 px-1.5 py-0.5 text-[10px] text-white">
+                            {formatDuration(video.duration)}
+                        </span>
+                    ) : null}
                 </div>
 
                 <div className="min-w-0">

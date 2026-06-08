@@ -12,7 +12,15 @@ export default function VideoCard({ video }: VideoCardProps) {
     return (
         <Link
             to={`/video/${video.id}`}
-            className="group block"
+            className="
+                group
+                block
+                rounded-2xl
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-brand-purple
+                focus-visible:ring-offset-2
+            "
         >
             <article
                 className="
@@ -23,29 +31,38 @@ export default function VideoCard({ video }: VideoCardProps) {
                     hover:card-gradient
                 "
             >
-                <div className="relative aspect-video overflow-hidden rounded-xl">
-                    <img
-                        src={video.thumbnail_360_url}
-                        alt={video.title}
-                        className="h-full w-full object-cover"
-                    />
+                <div className="relative aspect-video overflow-hidden rounded-xl bg-skeleton">
+                    {video.thumbnail_360_url ? (
+                        <img
+                            src={video.thumbnail_360_url}
+                            alt={video.title}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <div className="flex h-full w-full items-center justify-center text-xs text-text-secondary">
+                            No thumbnail
+                        </div>
+                    )}
 
-                    <span
-                        className="
-                            absolute
-                            bottom-2
-                            right-2
-                            rounded-md
-                            bg-black/75
-                            px-2
-                            py-1
-                            text-xs
-                            font-medium
-                            text-white
-                        "
-                    >
-                        {formatDuration(video.duration)}
-                    </span>
+                    {video.duration ? (
+                        <span
+                            className="
+                                absolute
+                                bottom-2
+                                right-2
+                                rounded-md
+                                bg-black/75
+                                px-2
+                                py-1
+                                text-xs
+                                font-medium
+                                text-white
+                            "
+                        >
+                            {formatDuration(video.duration)}
+                        </span>
+                    ) : null}
                 </div>
 
                 <div className="mt-3">
