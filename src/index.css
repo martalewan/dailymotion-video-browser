@@ -1,17 +1,52 @@
-* {
+@import "tailwindcss";
+
+@theme {
+  /* Base */
+
+  --color-background: #fbfbfe;
+  --color-surface: #ffffff;
+
+  --color-text-primary: #0d0d0d;
+  --color-text-secondary: #5f6472;
+
+  --color-overlay: rgba(0, 0, 0, 0.75);
+
+  --color-border-soft: #f4f1f8;
+
+  /* Brand */
+
+  --color-brand-purple: #a2a2fb;
+  --color-brand-pink: #f682f2;
+  --color-brand-pink-light: #fab3f7;
+  --color-brand-purple-dark: #6d5dfc;
+}
+
+@utility gradient-brand {
+  background: linear-gradient(228deg,
+      var(--color-brand-pink-light) 9%,
+      var(--color-brand-pink) 48%,
+      var(--color-brand-purple) 94%);
+}
+
+@utility card-gradient {
+  background: linear-gradient(135deg,
+      rgba(250, 179, 247, 0.08) 0%,
+      rgba(246, 130, 242, 0.05) 45%,
+      rgba(162, 162, 251, 0.08) 100%);
+}
+
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 html,
 body,
 #root {
-  margin: 0;
-  min-height: 100%;
+  min-height: 100vh;
 }
 
 body {
-  font-family:
-    Inter,
-    system-ui,
-    sans-serif;
+  margin: 0;
 }
