@@ -27,19 +27,27 @@ Users can:
 
 Install dependencies:
 
+```bash
 npm install
+```
 
 Start the development server:
 
+```bash
 npm run dev
+```
 
 Run tests:
 
+```bash
 npm run test:run
+```
 
 Build for production:
 
+```bash
 npm run build
+```
 
 ## Implementation Notes
 
