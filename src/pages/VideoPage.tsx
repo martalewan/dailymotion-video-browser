@@ -29,10 +29,12 @@ export default function VideoPage() {
 
     return (
         <main>
-            <img
-                src={video.thumbnail_720_url}
-                alt={video.title}
-                width={600}
+            <iframe
+                src={`https://www.dailymotion.com/embed/video/${video.id}`}
+                title={video.title}
+                width="100%"
+                height="400"
+                allow="autoplay; fullscreen"
             />
 
             <h1>{video.title}</h1>
