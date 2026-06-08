@@ -1,10 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-
 import { getVideo } from "../api/dailymotionApi";
+import LikeButton from "../components/LikeButton";
+import useLikedVideo from "../hooks/useLikedVideos";
 
 export default function VideoPage() {
     const { id } = useParams();
+    const { isLiked, toggleLike } = useLikedVideo(id);
 
     const {
         data: video,
@@ -36,6 +38,8 @@ export default function VideoPage() {
                 height="400"
                 allow="autoplay; fullscreen"
             />
+
+            <LikeButton isLiked={isLiked} onToggle={toggleLike} />
 
             <h1>{video.title}</h1>
 
