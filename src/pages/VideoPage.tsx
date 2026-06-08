@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { getVideo } from "../api/dailymotionApi";
 import LikeButton from "../components/LikeButton";
-import useLikedVideo from "../hooks/useLikedVideos";
+import useLikedVideo from "../hooks/useLikedVideo";
 
 export default function VideoPage() {
     const { id } = useParams();
