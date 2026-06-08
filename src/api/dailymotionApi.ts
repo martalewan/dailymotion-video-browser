@@ -1,4 +1,9 @@
-import type { Creator, Video, VideoDetails } from "../types/video";
+import type {
+    Creator,
+    DailymotionListResponse,
+    Video,
+    VideoDetails,
+} from "../types/video";
 
 const BASE_URL = "https://api.dailymotion.com";
 
@@ -22,7 +27,10 @@ const VIDEO_DETAILS_FIELDS = [
     "owner",
 ].join(",");
 
-export function buildApiUrl(path: string, params: Record<string, string | number>) {
+export function buildApiUrl(
+    path: string,
+    params: Record<string, string | number>,
+): string {
     const url = new URL(path, BASE_URL);
 
     Object.entries(params).forEach(([key, value]) => {
@@ -32,15 +40,27 @@ export function buildApiUrl(path: string, params: Record<string, string | number
     return url.toString();
 }
 
-export async function searchVideos(query: string): Promise<Video[]> {
+export async function searchVideos(
+    query: string,
+    page = 1,
+): Promise<DailymotionListResponse<Video>> {
     if (!query.trim()) {
-        return [];
+        return {
+            page,
+            limit: 12,
+            explicit: false,
+            total: 0,
+            has_more: false,
+            list: [],
+        };
     }
+
     const response = await fetch(
         buildApiUrl("/videos", {
             search: query,
             fields: VIDEO_LIST_FIELDS,
             limit: 12,
+            page,
         }),
     );
 
@@ -48,14 +68,14 @@ export async function searchVideos(query: string): Promise<Video[]> {
         throw new Error("Failed to fetch videos");
     }
 
-    const data = await response.json();
-
-    return data.list;
+    return response.json();
 }
 
 export async function getVideo(id: string): Promise<VideoDetails> {
     const response = await fetch(
-        `${BASE_URL}/video/${id}?fields=${VIDEO_DETAILS_FIELDS}`,
+        buildApiUrl(`/video/${id}`, {
+            fields: VIDEO_DETAILS_FIELDS,
+        }),
     );
 
     if (!response.ok) {
@@ -67,23 +87,27 @@ export async function getVideo(id: string): Promise<VideoDetails> {
 
 export async function getChannelVideos(channel: string): Promise<Video[]> {
     const response = await fetch(
-        `${BASE_URL}/videos?channel=${encodeURIComponent(channel)}&fields=${VIDEO_LIST_FIELDS}&limit=6`,
+        buildApiUrl("/videos", {
+            channel,
+            fields: VIDEO_LIST_FIELDS,
+            limit: 6,
+        }),
     );
 
     if (!response.ok) {
         throw new Error("Failed to fetch channel videos");
     }
 
-    const data = await response.json();
+    const data: DailymotionListResponse<Video> = await response.json();
 
     return data.list;
 }
 
-export async function getCreator(
-    id: string,
-): Promise<Creator> {
+export async function getCreator(id: string): Promise<Creator> {
     const response = await fetch(
-        `${BASE_URL}/user/${id}?fields=id,screenname,avatar_360_url`,
+        buildApiUrl(`/user/${id}`, {
+            fields: "id,screenname,avatar_360_url",
+        }),
     );
 
     if (!response.ok) {

@@ -15,11 +15,20 @@ export interface VideoDetails {
     duration: number;
     created_time: number;
     channel: string;
-    owner: string
+    owner: string;
 }
 
 export interface Creator {
     id: string;
     screenname: string;
     avatar_360_url: string;
+}
+
+export interface DailymotionListResponse<T> {
+    page: number;
+    limit: number;
+    explicit: boolean;
+    total: number;
+    has_more: boolean;
+    list: T[];
 }

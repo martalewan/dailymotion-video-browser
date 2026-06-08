@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { FaSearch } from "react-icons/fa";
 
 import logo from "../assets/dailymotion-logo.svg";
@@ -19,13 +19,19 @@ export default function SearchPage() {
     const debouncedQuery = useDebounce(query, 500);
 
     const {
-        data: videos = [],
+        data,
         isLoading,
         isFetching,
+        isFetchingNextPage,
+        fetchNextPage,
+        hasNextPage,
         error,
-    } = useQuery({
+    } = useInfiniteQuery({
         queryKey: ["videos", debouncedQuery],
-        queryFn: () => searchVideos(debouncedQuery),
+        queryFn: ({ pageParam }) => searchVideos(debouncedQuery, pageParam),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) =>
+            lastPage.has_more ? lastPage.page + 1 : undefined,
         enabled: debouncedQuery.trim().length > 0,
         staleTime: 1000 * 60 * 5,
     });
@@ -36,6 +42,8 @@ export default function SearchPage() {
         );
     }
 
+    const videos = data?.pages.flatMap((page) => page.list) ?? [];
+    const totalVideos = data?.pages[0]?.total;
     const hasSearch = debouncedQuery.trim().length > 0;
     const hasResults = videos.length > 0;
 
@@ -99,12 +107,13 @@ export default function SearchPage() {
 
                     {hasResults && (
                         <p className="mt-2 text-sm text-text-secondary">
-                            {videos.length} videos found for{" "}
+                            Showing {videos.length}
+                            {totalVideos ? ` of ${totalVideos}` : ""} videos for{" "}
                             <span className="text-text-primary">
                                 "{debouncedQuery}"
                             </span>
 
-                            {isFetching && (
+                            {isFetching && !isFetchingNextPage && (
                                 <span className="ml-2">
                                     Updating...
                                 </span>
@@ -124,14 +133,49 @@ export default function SearchPage() {
                         message={`No videos found for "${debouncedQuery}".`}
                     />
                 ) : hasResults ? (
-                    <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        {videos.map((video) => (
-                            <VideoCard
-                                key={video.id}
-                                video={video}
-                            />
-                        ))}
-                    </section>
+                    <>
+                        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                            {videos.map((video) => (
+                                <VideoCard
+                                    key={video.id}
+                                    video={video}
+                                />
+                            ))}
+                        </section>
+
+                        {hasNextPage && (
+                            <div className="mt-8 flex justify-center">
+                                <button
+                                    type="button"
+                                    onClick={() => fetchNextPage()}
+                                    disabled={isFetchingNextPage}
+                                    className="
+                                        rounded-xl
+                                        border
+                                        border-border-soft
+                                        bg-surface
+                                        px-5
+                                        py-3
+                                        text-sm
+                                        font-medium
+                                        text-text-primary
+                                        transition
+                                        hover:bg-background
+                                        disabled:cursor-not-allowed
+                                        disabled:opacity-60
+                                        focus-visible:outline-none
+                                        focus-visible:ring-2
+                                        focus-visible:ring-brand-purple
+                                        focus-visible:ring-offset-2
+                                    "
+                                >
+                                    {isFetchingNextPage
+                                        ? "Loading..."
+                                        : "Load more"}
+                                </button>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <EmptyState message="Search for a topic, creator, or video title to get started." />
                 )}
