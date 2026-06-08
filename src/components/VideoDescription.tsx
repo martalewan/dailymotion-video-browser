@@ -23,9 +23,9 @@ export default function VideoDescription({ description }: VideoDescriptionProps)
                 className={`
                     whitespace-pre-wrap
                     text-sm
-                    leading-7
+                    leading-6
                     text-text-secondary
-                    ${isExpanded ? "" : "line-clamp-6"}
+                    ${isExpanded ? "" : "line-clamp-2"}
                 `}
             >
                 {description}
