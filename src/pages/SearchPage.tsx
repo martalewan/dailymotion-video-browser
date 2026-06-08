@@ -71,8 +71,10 @@ export default function SearchPage() {
                         id="video-search"
                         type="search"
                         value={query}
+                        maxLength={100}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder="Search videos..."
+                        autoComplete="off"
                         className="
                             w-full
                             rounded-xl
@@ -100,7 +102,9 @@ export default function SearchPage() {
                     </h1>
 
                     {hasResults && (
-                        <p className="mt-2 text-sm text-text-secondary">
+                        <p
+                            aria-live="polite"
+                            className="mt-2 text-sm text-text-secondary">
                             Showing {videos.length}
                             {totalVideos ? ` of ${totalVideos}` : ""} videos for{" "}
                             <span className="text-text-primary">

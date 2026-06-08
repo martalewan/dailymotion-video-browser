@@ -168,6 +168,7 @@ export default function VideoPage() {
                                                 src={creator.avatar_360_url}
                                                 alt={creator.screenname}
                                                 loading="lazy"
+                                                decoding="async"
                                                 className="h-10 w-10 rounded-full object-cover"
                                             />
                                         ) : (

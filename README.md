@@ -25,6 +25,8 @@ Users can:
 
 ## Development
 
+No API key or environment variables are required.
+
 Install dependencies:
 
 ```bash
@@ -49,11 +51,17 @@ Build for production:
 npm run build
 ```
 
+Preview the production build:
+
+```bash
+npm run preview
+```
+
 ## Implementation Notes
 
 ### Search Experience
 
-Search input is debounced to avoid unnecessary API calls while typing. Results are fetched in pages and exposed through a Load more action, which keeps the initial request lightweight while still allowing deeper browsing.
+Search input is debounced to avoid unnecessary API calls while typing. Results are fetched in pages and exposed through a Load more action, keeping the initial request lightweight while still allowing deeper browsing.
 
 ### Video Page
 
@@ -81,8 +89,13 @@ I focused tests on custom logic and user-facing interactions:
 - Formatting utilities: verify duration and description formatting.
 - API URL helper: verifies query parameters are encoded correctly.
 
-I intentionally avoided testing third-party behavior from React Query, React Router, and the Dailymotion iframe player.
+I intentionally avoided testing third-party behavior from TanStack Query, React Router, and the Dailymotion iframe player.
 
 ## Future Improvements
 
-Given more time, I would consider adding shareable search URLs, richer player integration through Dailymotion's Player SDK, and end-to-end tests for the main search-to-playback flow.
+Given more time, I would consider:
+
+- Adding shareable search URLs so searches can be refreshed or shared.
+- Exploring Dailymotion's Player SDK for richer player control where publisher configuration is available.
+- Adding end-to-end tests for the main search-to-playback flow.
+- Adding a small favorites view for locally liked videos.

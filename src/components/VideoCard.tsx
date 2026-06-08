@@ -34,6 +34,7 @@ export default function VideoCard({ video }: VideoCardProps) {
                             src={video.thumbnail_360_url}
                             alt={video.title}
                             loading="lazy"
+                            decoding="async"
                             className="h-full w-full object-cover"
                         />
                     ) : (
