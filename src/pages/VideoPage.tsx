@@ -155,53 +155,52 @@ export default function VideoPage() {
                             />
                         </div>
 
-                        <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-                            <div className="min-w-0">
-                                <h1 className="line-clamp-2 break-words text-2xl font-semibold tracking-tight sm:text-3xl">
+                        <div className="mt-6">
+                            <div className="flex items-start gap-4">
+                                <h1 className="min-w-0 flex-1 line-clamp-2 break-words text-2xl font-semibold tracking-tight sm:text-3xl">
                                     {video.title}
                                 </h1>
 
-                                <div className="mt-4 flex min-h-10 items-center gap-3">
-                                    {creator ? (
-                                        creator.avatar_360_url ? (
-                                            <img
-                                                src={creator.avatar_360_url}
-                                                alt={creator.screenname}
-                                                loading="lazy"
-                                                decoding="async"
-                                                className="h-10 w-10 rounded-full object-cover"
-                                            />
-                                        ) : (
-                                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-skeleton text-sm font-semibold text-text-secondary">
-                                                {creatorInitial}
-                                            </div>
-                                        )
-                                    ) : (
-                                        <div
-                                            aria-hidden="true"
-                                            className="h-10 w-10 rounded-full bg-skeleton"
-                                        />
-                                    )}
-
-                                    <div>
-                                        <p className="text-sm font-medium text-text-primary">
-                                            {creator?.screenname ?? video.channel}
-                                        </p>
-
-                                        <p className="text-sm text-text-secondary">
-                                            {video.channel} · {formatDate(video.created_time)} ·{" "}
-                                            {formatDuration(video.duration)}
-                                        </p>
-                                    </div>
-                                </div>
+                                <LikeButton
+                                    isLiked={isLiked}
+                                    onToggle={toggleLike}
+                                />
                             </div>
 
-                            <LikeButton
-                                isLiked={isLiked}
-                                onToggle={toggleLike}
-                            />
-                        </div>
+                            <div className="mt-4 flex min-h-10 min-w-0 items-center gap-3">
+                                {creator ? (
+                                    creator.avatar_360_url ? (
+                                        <img
+                                            src={creator.avatar_360_url}
+                                            alt={creator.screenname}
+                                            loading="lazy"
+                                            decoding="async"
+                                            className="h-10 w-10 shrink-0 rounded-full object-cover"
+                                        />
+                                    ) : (
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-skeleton text-sm font-semibold text-text-secondary">
+                                            {creatorInitial}
+                                        </div>
+                                    )
+                                ) : (
+                                    <div
+                                        aria-hidden="true"
+                                        className="h-10 w-10 shrink-0 rounded-full bg-skeleton"
+                                    />
+                                )}
 
+                                <div className="min-w-0">
+                                    <p className="truncate text-sm font-medium text-text-primary">
+                                        {creator?.screenname ?? video.channel}
+                                    </p>
+
+                                    <p className="truncate text-sm text-text-secondary">
+                                        {video.channel} · {formatDate(video.created_time)} ·{" "}
+                                        {formatDuration(video.duration)}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                         <VideoDescription
                             key={video.id}
                             description={description}

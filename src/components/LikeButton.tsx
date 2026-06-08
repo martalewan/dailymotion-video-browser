@@ -19,8 +19,6 @@ export default function LikeButton({
                     flex
                     h-11
                     w-11
-                    min-h-11
-                    min-w-11
                     shrink-0
                     items-center
                     justify-center
