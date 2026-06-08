@@ -9,6 +9,7 @@ import ErrorState from "../components/ErrorState";
 import LikeButton from "../components/LikeButton";
 import LoadingState from "../components/LoadingState";
 import RelatedVideoCard from "../components/RelatedVideoCard";
+import RelatedVideoCardSkeleton from "../components/RelatedVideoCardSkeleton";
 
 import useLikedVideo from "../hooks/useLikedVideo";
 
@@ -33,7 +34,10 @@ export default function VideoPage() {
         enabled: Boolean(id),
     });
 
-    const { data: nextVideos } = useQuery({
+    const {
+        data: nextVideos,
+        isLoading: isLoadingRelatedVideos,
+    } = useQuery({
         queryKey: ["channel-videos", video?.channel],
         queryFn: () => getChannelVideos(video!.channel),
         enabled: Boolean(video?.channel),
@@ -159,13 +163,19 @@ export default function VideoPage() {
                         )}
                     </div>
 
-                    {relatedVideos.length > 0 && (
-                        <aside>
-                            <h2 className="mb-4 text-lg font-semibold tracking-tight">
-                                Related videos
-                            </h2>
+                    <aside className="h-fit lg:sticky lg:top-24">
+                        <h2 className="mb-4 text-lg font-semibold tracking-tight">
+                            Related videos
+                        </h2>
 
-                            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                        {isLoadingRelatedVideos ? (
+                            <div className="grid gap-4">
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                    <RelatedVideoCardSkeleton key={index} />
+                                ))}
+                            </div>
+                        ) : relatedVideos.length > 0 ? (
+                            <div className="grid gap-4">
                                 {relatedVideos.map((nextVideo) => (
                                     <RelatedVideoCard
                                         key={nextVideo.id}
@@ -173,8 +183,8 @@ export default function VideoPage() {
                                     />
                                 ))}
                             </div>
-                        </aside>
-                    )}
+                        ) : null}
+                    </aside>
                 </div>
             </section>
         </main>

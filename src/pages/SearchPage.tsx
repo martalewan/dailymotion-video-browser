@@ -9,7 +9,7 @@ import { searchVideos } from "../api/dailymotionApi";
 import useDebounce from "../hooks/useDebounce";
 
 import VideoCard from "../components/VideoCard";
-import LoadingState from "../components/LoadingState";
+import VideoCardSkeleton from "../components/VideoCardSkeleton";
 import ErrorState from "../components/ErrorState";
 import EmptyState from "../components/EmptyState";
 
@@ -19,8 +19,9 @@ export default function SearchPage() {
     const debouncedQuery = useDebounce(query, 500);
 
     const {
-        data: videos,
+        data: videos = [],
         isLoading,
+        isFetching,
         error,
     } = useQuery({
         queryKey: ["videos", debouncedQuery],
@@ -28,18 +29,14 @@ export default function SearchPage() {
         enabled: debouncedQuery.trim().length > 0,
     });
 
-    if (isLoading) {
-        return <LoadingState message="Loading videos..." />;
-    }
-
     if (error) {
         return (
             <ErrorState message="Something went wrong while loading videos." />
         );
     }
 
-    const hasResults = videos && videos.length > 0;
     const hasSearch = debouncedQuery.trim().length > 0;
+    const hasResults = videos.length > 0;
 
     return (
         <main className="min-h-screen bg-background text-text-primary">
@@ -74,7 +71,6 @@ export default function SearchPage() {
                                 pl-11
                                 pr-4
                                 text-sm
-                                text-text-primary
                                 outline-none
                                 transition-all
                                 focus:border-brand-purple
@@ -98,11 +94,23 @@ export default function SearchPage() {
                             <span className="text-text-primary">
                                 "{debouncedQuery}"
                             </span>
+
+                            {isFetching && (
+                                <span className="ml-2">
+                                    Updating...
+                                </span>
+                            )}
                         </p>
                     )}
                 </div>
 
-                {hasSearch && !hasResults ? (
+                {isLoading ? (
+                    <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        {Array.from({ length: 8 }).map((_, index) => (
+                            <VideoCardSkeleton key={index} />
+                        ))}
+                    </section>
+                ) : hasSearch && !hasResults ? (
                     <EmptyState
                         message={`No videos found for "${debouncedQuery}".`}
                     />

@@ -17,7 +17,6 @@ export default function VideoCard({ video }: VideoCardProps) {
             <article
                 className="
                     rounded-2xl
-                    bg-surface
                     p-3
                     transition-all
                     duration-200
