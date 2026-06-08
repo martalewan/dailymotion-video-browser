@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -16,11 +15,10 @@ import useLikedVideo from "../hooks/useLikedVideo";
 import { formatDate } from "../utils/formatDate";
 import { formatDescription } from "../utils/formatDescription";
 import { formatDuration } from "../utils/formatDuration";
+import VideoDescription from "../components/VideoDescription";
 
 export default function VideoPage() {
     const { id } = useParams();
-    const [isExpanded, setIsExpanded] = useState(false);
-
     const { isLiked, toggleLike } = useLikedVideo(id);
 
     const {
@@ -48,10 +46,6 @@ export default function VideoPage() {
         enabled: Boolean(video?.owner),
         staleTime: 1000 * 60 * 5,
     });
-
-    useEffect(() => {
-        setIsExpanded(false);
-    }, [id]);
 
     if (error) {
         return (
@@ -130,7 +124,6 @@ export default function VideoPage() {
     const relatedVideos =
         nextVideos?.filter((nextVideo) => nextVideo.id !== video.id) ?? [];
 
-    const shouldShowDescriptionToggle = description.length > 250;
 
     const creatorInitial = creator?.screenname?.charAt(0).toUpperCase();
 
@@ -215,46 +208,10 @@ export default function VideoPage() {
                             />
                         </div>
 
-                        {description && (
-                            <section className="mt-8">
-                                <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-text-secondary">
-                                    Description
-                                </h2>
-
-                                <p
-                                    className={`
-                                        whitespace-pre-wrap
-                                        text-sm
-                                        leading-7
-                                        text-text-secondary
-                                        ${isExpanded ? "" : "line-clamp-6"}
-                                    `}
-                                >
-                                    {description}
-                                </p>
-
-                                {shouldShowDescriptionToggle && (
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setIsExpanded((current) => !current)
-                                        }
-                                        className="
-                                        mt-3
-                                        rounded-md
-                                        text-sm
-                                        font-medium
-                                        text-brand-purple-dark
-                                        focus-visible:outline-none
-                                        focus-visible:ring-2
-                                        focus-visible:ring-brand-purple
-                                        focus-visible:ring-offset-2
-                                    "                                    >
-                                        {isExpanded ? "Show less" : "Show more"}
-                                    </button>
-                                )}
-                            </section>
-                        )}
+                        <VideoDescription
+                            key={video.id}
+                            description={description}
+                        />
                     </div>
 
                     <aside className="h-fit lg:sticky lg:top-24">
