@@ -17,10 +17,7 @@ export default function RelatedVideoCard({
             className="
                 block
                 rounded-xl
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-brand-purple
-                focus-visible:ring-offset-2
+                focus-ring
             "
         >
             <article className="flex gap-3 rounded-xl p-2 hover:bg-surface">

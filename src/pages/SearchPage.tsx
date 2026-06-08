@@ -10,6 +10,7 @@ import ErrorState from "../components/ErrorState";
 import PageHeader from "../components/PageHeader";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../components/VideoCardSkeleton";
+import { QUERY_STALE_TIME } from "../config/query";
 
 export default function SearchPage() {
     const [query, setQuery] = useState("");
@@ -32,7 +33,7 @@ export default function SearchPage() {
         getNextPageParam: (lastPage) =>
             lastPage.has_more ? lastPage.page + 1 : undefined,
         enabled: debouncedQuery.trim().length > 0,
-        staleTime: 1000 * 60 * 5,
+        staleTime: QUERY_STALE_TIME,
     });
 
     if (error) {
@@ -76,7 +77,7 @@ export default function SearchPage() {
                             w-full
                             rounded-xl
                             border
-                            border-border-soft
+                            border-border
                             bg-surface
                             py-3
                             pl-11
@@ -92,7 +93,7 @@ export default function SearchPage() {
                 </div>
             </PageHeader>
 
-            <section className="mx-auto max-w-[1600px] px-5 py-8">
+            <section className="page-container py-8">
                 <div className="mb-7">
                     <h1 className="text-3xl font-semibold tracking-tight">
                         Discover videos instantly
@@ -146,7 +147,7 @@ export default function SearchPage() {
                                     className="
                                         rounded-xl
                                         border
-                                        border-border-soft
+                                        border-border
                                         bg-surface
                                         px-5
                                         py-3
@@ -157,10 +158,7 @@ export default function SearchPage() {
                                         hover:bg-background
                                         disabled:cursor-not-allowed
                                         disabled:opacity-60
-                                        focus-visible:outline-none
-                                        focus-visible:ring-2
-                                        focus-visible:ring-brand-purple
-                                        focus-visible:ring-offset-2
+                                        focus-ring
                                     "
                                 >
                                     {isFetchingNextPage

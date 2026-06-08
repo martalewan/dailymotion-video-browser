@@ -9,9 +9,7 @@
   --color-text-primary: #0d0d0d;
   --color-text-secondary: #5f6472;
 
-  --color-overlay: rgba(0, 0, 0, 0.75);
-
-  --color-border-soft: #f4f1f8;
+  --color-border: #f4f1f8;
 
   --color-skeleton: #e6e0f0;
 
@@ -35,6 +33,14 @@
       rgba(250, 179, 247, 0.08) 0%,
       rgba(246, 130, 242, 0.05) 45%,
       rgba(162, 162, 251, 0.08) 100%);
+}
+
+@utility focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple focus-visible:ring-offset-2;
+}
+
+@utility page-container {
+  @apply mx-auto max-w-[1600px] px-5;
 }
 
 *,

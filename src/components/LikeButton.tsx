@@ -24,13 +24,10 @@ export default function LikeButton({
                 rounded-xl
                 transition-all
                 duration-200
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-brand-purple
-                focus-visible:ring-offset-2
+                focus-ring
                 ${isLiked
                     ? "gradient-brand text-text-primary"
-                    : "border border-border-soft bg-surface text-text-primary hover:bg-background"
+                    : "border border-border bg-surface text-text-primary hover:bg-background"
                 }
             `}
         >

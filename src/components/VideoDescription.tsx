@@ -41,10 +41,7 @@ export default function VideoDescription({ description }: VideoDescriptionProps)
                         text-sm
                         font-medium
                         text-brand-purple-dark
-                        focus-visible:outline-none
-                        focus-visible:ring-2
-                        focus-visible:ring-brand-purple
-                        focus-visible:ring-offset-2
+                        focus-ring
                     "
                 >
                     {isExpanded ? "Show less" : "Show more"}

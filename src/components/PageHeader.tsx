@@ -10,16 +10,13 @@ interface PageHeaderProps {
 export default function PageHeader({ children }: PageHeaderProps) {
     return (
         <header className="sticky top-0 z-10 bg-background/90 backdrop-blur-xl">
-            <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-4 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
+            <div className="page-container flex flex-col items-start gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-5">
                 <Link
                     to="/"
                     className="
                         shrink-0
                         rounded-md
-                        focus-visible:outline-none
-                        focus-visible:ring-2
-                        focus-visible:ring-brand-purple
-                        focus-visible:ring-offset-2
+                        focus-ring
                     "
                 >
                     <img

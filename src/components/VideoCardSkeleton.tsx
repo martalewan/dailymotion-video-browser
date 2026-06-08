@@ -1,6 +1,8 @@
 export default function VideoCardSkeleton() {
     return (
-        <article aria-hidden="true" className="rounded-2xl p-3"
+        <article
+            aria-hidden="true"
+            className="rounded-2xl p-3"
         >
             <div className="aspect-video animate-pulse rounded-xl bg-skeleton" />
 

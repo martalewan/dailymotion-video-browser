@@ -10,13 +10,14 @@ import PageHeader from "../components/PageHeader";
 import RelatedVideoCard from "../components/RelatedVideoCard";
 import RelatedVideoCardSkeleton from "../components/RelatedVideoCardSkeleton";
 import VideoPlayerSkeleton from "../components/VideoPlayerSkeleton";
+import VideoDescription from "../components/VideoDescription";
 
 import useLikedVideo from "../hooks/useLikedVideo";
 
 import { formatDate } from "../utils/formatDate";
 import { formatDescription } from "../utils/formatDescription";
 import { formatDuration } from "../utils/formatDuration";
-import VideoDescription from "../components/VideoDescription";
+import { QUERY_STALE_TIME } from "../config/query";
 
 function BackToSearchLink() {
     return (
@@ -30,10 +31,7 @@ function BackToSearchLink() {
                 text-text-secondary
                 transition-colors
                 hover:text-text-primary
-                focus-visible:outline-none
-                focus-visible:ring-2
-                focus-visible:ring-brand-purple
-                focus-visible:ring-offset-2
+                focus-ring
             "
         >
             ← Back to search
@@ -55,21 +53,21 @@ export default function VideoPage() {
         queryKey: ["video", id],
         queryFn: () => getVideo(id!),
         enabled: Boolean(id),
-        staleTime: 1000 * 60 * 5,
+        staleTime: QUERY_STALE_TIME,
     });
 
-    const { data: nextVideos, isLoading: isLoadingRelatedVideos } = useQuery({
+    const { data: relatedVideosData, isLoading: isLoadingRelatedVideos } = useQuery({
         queryKey: ["channel-videos", video?.channel],
         queryFn: () => getChannelVideos(video!.channel),
         enabled: Boolean(video?.channel),
-        staleTime: 1000 * 60 * 5,
+        staleTime: QUERY_STALE_TIME,
     });
 
     const { data: creator } = useQuery({
         queryKey: ["creator", video?.owner],
         queryFn: () => getCreator(video!.owner),
         enabled: Boolean(video?.owner),
-        staleTime: 1000 * 60 * 5,
+        staleTime: QUERY_STALE_TIME,
     });
 
     if (error) {
@@ -89,7 +87,7 @@ export default function VideoPage() {
                     <BackToSearchLink />
                 </PageHeader>
 
-                <section className="mx-auto max-w-[1600px] px-5 py-8">
+                <section className="page-container py-8">
                     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
                         <div>
                             <VideoPlayerSkeleton />
@@ -135,7 +133,7 @@ export default function VideoPage() {
     const description = formatDescription(video.description);
 
     const relatedVideos =
-        nextVideos?.filter((nextVideo) => nextVideo.id !== video.id) ?? [];
+        relatedVideosData?.filter((relatedVideo) => relatedVideo.id !== video.id) ?? [];
 
     const creatorInitial = creator?.screenname?.charAt(0).toUpperCase();
 
@@ -145,7 +143,7 @@ export default function VideoPage() {
                 <BackToSearchLink />
             </PageHeader>
 
-            <section className="mx-auto max-w-[1600px] px-5 py-8">
+            <section className="page-container py-8">
                 <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
                     <div>
                         <div className="overflow-hidden rounded-2xl bg-black">

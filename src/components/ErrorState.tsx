@@ -13,7 +13,7 @@ export default function ErrorState({
         <main className="flex min-h-screen items-center justify-center bg-background px-5 text-text-primary">
             <section
                 role="alert"
-                className="max-w-md rounded-2xl border border-border-soft bg-surface p-6 text-center"
+                className="max-w-md rounded-2xl border border-border bg-surface p-6 text-center"
             >
                 <h1 className="text-xl font-semibold tracking-tight">
                     Something went wrong
@@ -31,7 +31,7 @@ export default function ErrorState({
                             mt-6
                             rounded-xl
                             border
-                            border-border-soft
+                            border-border
                             bg-background
                             px-5
                             py-3
@@ -40,10 +40,7 @@ export default function ErrorState({
                             text-text-primary
                             transition
                             hover:bg-surface
-                            focus-visible:outline-none
-                            focus-visible:ring-2
-                            focus-visible:ring-brand-purple
-                            focus-visible:ring-offset-2
+                            focus-ring
                         "
                     >
                         {actionLabel}

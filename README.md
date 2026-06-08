@@ -63,7 +63,6 @@ The app uses Dailymotion's standard public iframe embed without forcing autoplay
 
 Some console warnings and browser diagnostics may appear from Dailymotion's embedded player internals, such as player-id monetization guidance, ad SDK preloading, third-party cookies, or player-managed layout behavior. Creating a managed Dailymotion Player Embed requires publisher-side configuration and is outside the scope of this public API assignment.
 
-
 ### Local Like State
 
 The like / unlike feature is kept client-side and persisted in `localStorage`, matching the assignment requirement that no API call is needed.
