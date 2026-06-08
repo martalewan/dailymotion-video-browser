@@ -1,23 +1,77 @@
 import { Link } from "react-router-dom";
+
 import type { Video } from "../types/video";
+import { formatDuration } from "../utils/formatDuration";
+import { formatDate } from "../utils/formatDate";
 
 interface VideoCardProps {
     video: Video;
 }
 
-export default function VideoCard({
-    video,
-}: VideoCardProps) {
+export default function VideoCard({ video }: VideoCardProps) {
     return (
-        <Link to={`/video/${video.id}`}>
-            <article>
-                <img
-                    src={video.thumbnail_360_url}
-                    alt={video.title}
-                    width={320}
-                />
+        <Link
+            to={`/video/${video.id}`}
+            className="group block"
+        >
+            <article
+                className="
+                    rounded-2xl
+                    bg-surface
+                    p-3
+                    transition-all
+                    duration-200
+                    hover:card-gradient
+                "
+            >
+                <div className="relative aspect-video overflow-hidden rounded-xl">
+                    <img
+                        src={video.thumbnail_360_url}
+                        alt={video.title}
+                        className="h-full w-full object-cover"
+                    />
 
-                <h2>{video.title}</h2>
+                    <span
+                        className="
+                            absolute
+                            bottom-2
+                            right-2
+                            rounded-md
+                            bg-black/75
+                            px-2
+                            py-1
+                            text-xs
+                            font-medium
+                            text-white
+                        "
+                    >
+                        {formatDuration(video.duration)}
+                    </span>
+                </div>
+
+                <div className="mt-3">
+                    <h2
+                        className="
+                            line-clamp-2
+                            text-sm
+                            font-medium
+                            leading-snug
+                            text-text-primary
+                        "
+                    >
+                        {video.title}
+                    </h2>
+
+                    <p
+                        className="
+                            mt-1
+                            text-xs
+                            text-text-secondary
+                        "
+                    >
+                        {video.channel} · {formatDate(video.created_time)}
+                    </p>
+                </div>
             </article>
         </Link>
     );
