@@ -5,6 +5,10 @@ const BASE_URL = "https://api.dailymotion.com";
 export async function searchVideos(
     query: string,
 ): Promise<Video[]> {
+    if (!query.trim()) {
+        return [];
+    }
+
     const response = await fetch(
         `${BASE_URL}/videos?search=${encodeURIComponent(query)}&fields=id,title,thumbnail_360_url&limit=12`,
     );

@@ -1,26 +1,23 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+
 import { searchVideos } from "../api/dailymotionApi";
+import useDebounce from "../hooks/useDebounce";
 
 export default function SearchPage() {
     const [query, setQuery] = useState("dogs");
+
+    const debouncedQuery = useDebounce(query, 500);
 
     const {
         data: videos,
         isLoading,
         error,
     } = useQuery({
-        queryKey: ["videos", query],
-        queryFn: () => searchVideos(query),
+        queryKey: ["videos", debouncedQuery],
+        queryFn: () => searchVideos(debouncedQuery),
+        enabled: debouncedQuery.trim().length > 0,
     });
-
-    if (isLoading) {
-        return <p>Loading...</p>;
-    }
-
-    if (error) {
-        return <p>Something went wrong.</p>;
-    }
 
     return (
         <main>
@@ -32,6 +29,10 @@ export default function SearchPage() {
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Search videos..."
             />
+
+            {isLoading && <p>Loading...</p>}
+
+            {error && <p>Something went wrong.</p>}
 
             <ul>
                 {videos?.map((video) => (
