@@ -2,21 +2,20 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getCreator, getChannelVideos, getVideo } from "../api/dailymotionApi";
+import { getChannelVideos, getCreator, getVideo } from "../api/dailymotionApi";
 
 import EmptyState from "../components/EmptyState";
 import ErrorState from "../components/ErrorState";
 import LikeButton from "../components/LikeButton";
-import LoadingState from "../components/LoadingState";
 import RelatedVideoCard from "../components/RelatedVideoCard";
 import RelatedVideoCardSkeleton from "../components/RelatedVideoCardSkeleton";
+import VideoPlayerSkeleton from "../components/VideoPlayerSkeleton";
 
 import useLikedVideo from "../hooks/useLikedVideo";
 
 import { formatDate } from "../utils/formatDate";
 import { formatDescription } from "../utils/formatDescription";
 import { formatDuration } from "../utils/formatDuration";
-
 
 export default function VideoPage() {
     const { id } = useParams();
@@ -34,10 +33,7 @@ export default function VideoPage() {
         enabled: Boolean(id),
     });
 
-    const {
-        data: nextVideos,
-        isLoading: isLoadingRelatedVideos,
-    } = useQuery({
+    const { data: nextVideos, isLoading: isLoadingRelatedVideos } = useQuery({
         queryKey: ["channel-videos", video?.channel],
         queryFn: () => getChannelVideos(video!.channel),
         enabled: Boolean(video?.channel),
@@ -49,13 +45,55 @@ export default function VideoPage() {
         enabled: Boolean(video?.owner),
     });
 
-    if (isLoading) {
-        return <LoadingState message="Loading video..." />;
-    }
-
     if (error) {
         return (
             <ErrorState message="Something went wrong while loading this video." />
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <main className="min-h-screen bg-background text-text-primary">
+                <section className="mx-auto max-w-[1600px] px-5 py-8">
+                    <Link
+                        to="/"
+                        className="mb-6 inline-flex text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
+                    >
+                        ← Back to search
+                    </Link>
+
+                    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+                        <div>
+                            <VideoPlayerSkeleton />
+
+                            <div className="mt-6 space-y-4">
+                                <div className="h-8 w-3/4 animate-pulse rounded bg-skeleton" />
+
+                                <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 animate-pulse rounded-full bg-skeleton" />
+
+                                    <div className="space-y-2">
+                                        <div className="h-4 w-36 animate-pulse rounded bg-skeleton" />
+                                        <div className="h-3 w-56 animate-pulse rounded bg-skeleton" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <aside className="h-fit lg:sticky lg:top-24">
+                            <h2 className="mb-4 text-lg font-semibold tracking-tight">
+                                Related videos
+                            </h2>
+
+                            <div className="grid gap-4">
+                                {Array.from({ length: 5 }).map((_, index) => (
+                                    <RelatedVideoCardSkeleton key={index} />
+                                ))}
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+            </main>
         );
     }
 
@@ -111,14 +149,16 @@ export default function VideoPage() {
                                             </p>
 
                                             <p className="text-sm text-text-secondary">
-                                                {video.channel} · {formatDate(video.created_time)} ·{" "}
+                                                {video.channel} ·{" "}
+                                                {formatDate(video.created_time)} ·{" "}
                                                 {formatDuration(video.duration)}
                                             </p>
                                         </div>
                                     </div>
                                 ) : (
                                     <p className="mt-2 text-sm text-text-secondary">
-                                        {video.channel} · {formatDate(video.created_time)} ·{" "}
+                                        {video.channel} ·{" "}
+                                        {formatDate(video.created_time)} ·{" "}
                                         {formatDuration(video.duration)}
                                     </p>
                                 )}
@@ -132,18 +172,18 @@ export default function VideoPage() {
 
                         {description && (
                             <section className="mt-8">
-                                <h2 className="mb-3 text-sm font-medium text-text-secondary uppercase tracking-wide">
+                                <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-text-secondary">
                                     Description
                                 </h2>
 
                                 <p
                                     className={`
-                                    whitespace-pre-wrap
-                                    text-sm
-                                    leading-7
-                                    text-text-secondary
-                                    ${isExpanded ? "" : "line-clamp-6"}
-                                `}
+                                        whitespace-pre-wrap
+                                        text-sm
+                                        leading-7
+                                        text-text-secondary
+                                        ${isExpanded ? "" : "line-clamp-6"}
+                                    `}
                                 >
                                     {description}
                                 </p>
