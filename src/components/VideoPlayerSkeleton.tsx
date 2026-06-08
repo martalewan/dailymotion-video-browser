@@ -1,6 +1,8 @@
 export default function VideoPlayerSkeleton() {
     return (
-        <div className="relative aspect-video overflow-hidden rounded-2xl bg-skeleton">
+        <div
+            aria-hidden="true"
+            className="relative aspect-video overflow-hidden rounded-2xl bg-skeleton">
             <div
                 className="
                     absolute

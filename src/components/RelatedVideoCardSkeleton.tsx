@@ -1,6 +1,6 @@
 export default function RelatedVideoCardSkeleton() {
     return (
-        <article className="flex gap-3 rounded-xl p-2">
+        <article aria-hidden="true" className="flex gap-3 rounded-xl p-2">
             <div className="h-20 w-36 shrink-0 animate-pulse rounded-lg bg-skeleton" />
 
             <div className="flex-1">

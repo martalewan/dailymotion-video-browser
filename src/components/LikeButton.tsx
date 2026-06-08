@@ -14,6 +14,7 @@ export default function LikeButton({
             type="button"
             onClick={onToggle}
             aria-label={isLiked ? "Unlike video" : "Like video"}
+            aria-pressed={isLiked}
             className={`
                 flex
                 h-11

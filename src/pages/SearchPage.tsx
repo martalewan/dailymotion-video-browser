@@ -26,6 +26,7 @@ export default function SearchPage() {
         fetchNextPage,
         hasNextPage,
         error,
+        refetch,
     } = useInfiniteQuery({
         queryKey: ["videos", debouncedQuery],
         queryFn: ({ pageParam }) => searchVideos(debouncedQuery, pageParam),
@@ -38,7 +39,11 @@ export default function SearchPage() {
 
     if (error) {
         return (
-            <ErrorState message="Something went wrong while loading videos." />
+            <ErrorState
+                message="Something went wrong while loading videos."
+                actionLabel="Try again"
+                onAction={() => refetch()}
+            />
         );
     }
 
@@ -70,7 +75,9 @@ export default function SearchPage() {
                             Search videos
                         </label>
 
-                        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-text-secondary" />
+                        <FaSearch
+                            aria-hidden="true"
+                            className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-text-secondary" />
 
                         <input
                             id="video-search"
@@ -149,6 +156,7 @@ export default function SearchPage() {
                                     type="button"
                                     onClick={() => fetchNextPage()}
                                     disabled={isFetchingNextPage}
+                                    aria-busy={isFetchingNextPage}
                                     className="
                                         rounded-xl
                                         border

@@ -27,6 +27,7 @@ export default function VideoPage() {
         data: video,
         isLoading,
         error,
+        refetch,
     } = useQuery({
         queryKey: ["video", id],
         queryFn: () => getVideo(id!),
@@ -54,7 +55,11 @@ export default function VideoPage() {
 
     if (error) {
         return (
-            <ErrorState message="Something went wrong while loading this video." />
+            <ErrorState
+                message="Something went wrong while loading this video."
+                actionLabel="Try again"
+                onAction={() => refetch()}
+            />
         );
     }
 
@@ -64,7 +69,19 @@ export default function VideoPage() {
                 <section className="mx-auto max-w-[1600px] px-5 py-8">
                     <Link
                         to="/"
-                        className="mb-6 inline-flex text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
+                        className="
+                        mb-6
+                        inline-flex
+                        rounded-md
+                        text-sm
+                        font-medium
+                        text-text-secondary
+                        transition-colors
+                        hover:text-text-primary
+                        focus-visible:outline-none
+                        focus-visible:ring-2
+                        focus-visible:ring-brand-purple
+                        focus-visible:ring-offset-2"
                     >
                         ← Back to search
                     </Link>
@@ -122,8 +139,20 @@ export default function VideoPage() {
             <section className="mx-auto max-w-[1600px] px-5 py-8">
                 <Link
                     to="/"
-                    className="mb-6 inline-flex text-sm font-medium text-text-secondary transition-colors hover:text-text-primary"
-                >
+                    className="
+                    mb-6
+                    inline-flex
+                    rounded-md
+                    text-sm
+                    font-medium
+                    text-text-secondary
+                    transition-colors
+                    hover:text-text-primary
+                    focus-visible:outline-none
+                    focus-visible:ring-2
+                    focus-visible:ring-brand-purple
+                    focus-visible:ring-offset-2
+                ">
                     ← Back to search
                 </Link>
 
@@ -210,8 +239,17 @@ export default function VideoPage() {
                                         onClick={() =>
                                             setIsExpanded((current) => !current)
                                         }
-                                        className="mt-3 text-sm font-medium text-brand-purple-dark"
-                                    >
+                                        className="
+                                        mt-3
+                                        rounded-md
+                                        text-sm
+                                        font-medium
+                                        text-brand-purple-dark
+                                        focus-visible:outline-none
+                                        focus-visible:ring-2
+                                        focus-visible:ring-brand-purple
+                                        focus-visible:ring-offset-2
+                                    "                                    >
                                         {isExpanded ? "Show less" : "Show more"}
                                     </button>
                                 )}
