@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-
 import { searchVideos } from "../api/dailymotionApi";
 import useDebounce from "../hooks/useDebounce";
+import VideoCard from "../components/VideoCard";
 
 export default function SearchPage() {
     const [query, setQuery] = useState("dogs");
@@ -34,13 +34,14 @@ export default function SearchPage() {
 
             {error && <p>Something went wrong.</p>}
 
-            <ul>
+            <section>
                 {videos?.map((video) => (
-                    <li key={video.id}>
-                        {video.title}
-                    </li>
+                    <VideoCard
+                        key={video.id}
+                        video={video}
+                    />
                 ))}
-            </ul>
+            </section>
         </main>
     );
 }
