@@ -61,7 +61,8 @@ The detail page shows the embedded Dailymotion player, creator information, vide
 
 The app uses Dailymotion's standard public iframe embed without forcing autoplay or mute parameters. Playback behavior can still be affected by Dailymotion's player configuration and browser media policies, especially around autoplay with sound.
 
-Some console warnings may appear from Dailymotion's embedded player internals, such as player-id monetization guidance or ad SDK preloading. Creating a managed Dailymotion Player Embed requires publisher-side configuration and is outside the scope of this public API assignment.
+Some console warnings and browser diagnostics may appear from Dailymotion's embedded player internals, such as player-id monetization guidance, ad SDK preloading, third-party cookies, or player-managed layout behavior. Creating a managed Dailymotion Player Embed requires publisher-side configuration and is outside the scope of this public API assignment.
+
 
 ### Local Like State
 

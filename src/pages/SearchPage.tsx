@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FaSearch } from "react-icons/fa";
-
-import logo from "../assets/dailymotion-logo.svg";
 
 import { searchVideos } from "../api/dailymotionApi";
 import useDebounce from "../hooks/useDebounce";
 
+import EmptyState from "../components/EmptyState";
+import ErrorState from "../components/ErrorState";
+import PageHeader from "../components/PageHeader";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../components/VideoCardSkeleton";
-import ErrorState from "../components/ErrorState";
-import EmptyState from "../components/EmptyState";
 
 export default function SearchPage() {
     const [query, setQuery] = useState("");
@@ -54,58 +52,45 @@ export default function SearchPage() {
 
     return (
         <main className="min-h-screen bg-background text-text-primary">
-            <header className="sticky top-0 z-10 bg-background/90 backdrop-blur-xl">
-                <div className="mx-auto flex max-w-[1600px] flex-col items-start gap-4 px-5 py-4 sm:flex-row sm:items-center sm:gap-5">
-                    <Link
-                        to="/"
-                        className="shrink-0"
+            <PageHeader>
+                <div className="relative w-full sm:flex-1">
+                    <label
+                        htmlFor="video-search"
+                        className="sr-only"
                     >
-                        <img
-                            src={logo}
-                            alt="Dailymotion"
-                            className="h-8"
-                        />
-                    </Link>
+                        Search videos
+                    </label>
 
-                    <div className="relative w-full sm:flex-1">
-                        <label
-                            htmlFor="video-search"
-                            className="sr-only"
-                        >
-                            Search videos
-                        </label>
+                    <FaSearch
+                        aria-hidden="true"
+                        className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-text-secondary"
+                    />
 
-                        <FaSearch
-                            aria-hidden="true"
-                            className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-text-secondary"
-                        />
-
-                        <input
-                            id="video-search"
-                            type="search"
-                            value={query}
-                            onChange={(event) => setQuery(event.target.value)}
-                            placeholder="Search videos..."
-                            className="
-                                w-full
-                                rounded-xl
-                                border
-                                border-border-soft
-                                bg-surface
-                                py-3
-                                pl-11
-                                pr-4
-                                text-sm
-                                outline-none
-                                transition-all
-                                focus:border-brand-purple
-                                focus:ring-2
-                                focus:ring-brand-purple/20
-                            "
-                        />
-                    </div>
+                    <input
+                        id="video-search"
+                        type="search"
+                        value={query}
+                        onChange={(event) => setQuery(event.target.value)}
+                        placeholder="Search videos..."
+                        className="
+                            w-full
+                            rounded-xl
+                            border
+                            border-border-soft
+                            bg-surface
+                            py-3
+                            pl-11
+                            pr-4
+                            text-sm
+                            outline-none
+                            transition-all
+                            focus:border-brand-purple
+                            focus:ring-2
+                            focus:ring-brand-purple/20
+                        "
+                    />
                 </div>
-            </header>
+            </PageHeader>
 
             <section className="mx-auto max-w-[1600px] px-5 py-8">
                 <div className="mb-7">
@@ -187,13 +172,15 @@ export default function SearchPage() {
                     </>
                 ) : (
                     <section className="pt-2">
-                        <h2 className="text-xl font-semibold tracking-tight">
-                            Find your next video
-                        </h2>
+                        <div className="max-w-xl">
+                            <h2 className="text-xl font-semibold tracking-tight">
+                                Find your next video
+                            </h2>
 
-                        <p className="mt-2 text-sm leading-6 text-text-secondary">
-                            Search by topic, creator, or title to start browsing.
-                        </p>
+                            <p className="mt-2 text-sm leading-6 text-text-secondary">
+                                Search by topic, creator, or title to start browsing.
+                            </p>
+                        </div>
                     </section>
                 )}
             </section>

@@ -6,6 +6,7 @@ import { getChannelVideos, getCreator, getVideo } from "../api/dailymotionApi";
 import EmptyState from "../components/EmptyState";
 import ErrorState from "../components/ErrorState";
 import LikeButton from "../components/LikeButton";
+import PageHeader from "../components/PageHeader";
 import RelatedVideoCard from "../components/RelatedVideoCard";
 import RelatedVideoCardSkeleton from "../components/RelatedVideoCardSkeleton";
 import VideoPlayerSkeleton from "../components/VideoPlayerSkeleton";
@@ -17,8 +18,32 @@ import { formatDescription } from "../utils/formatDescription";
 import { formatDuration } from "../utils/formatDuration";
 import VideoDescription from "../components/VideoDescription";
 
+function BackToSearchLink() {
+    return (
+        <Link
+            to="/"
+            className="
+                w-fit
+                rounded-md
+                text-sm
+                font-medium
+                text-text-secondary
+                transition-colors
+                hover:text-text-primary
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-brand-purple
+                focus-visible:ring-offset-2
+            "
+        >
+            ← Back to search
+        </Link>
+    );
+}
+
 export default function VideoPage() {
     const { id } = useParams();
+
     const { isLiked, toggleLike } = useLikedVideo(id);
 
     const {
@@ -60,31 +85,19 @@ export default function VideoPage() {
     if (isLoading) {
         return (
             <main className="min-h-screen bg-background text-text-primary">
-                <section className="mx-auto max-w-[1600px] px-5 py-8">
-                    <Link
-                        to="/"
-                        className="
-                        mb-6
-                        inline-flex
-                        rounded-md
-                        text-sm
-                        font-medium
-                        text-text-secondary
-                        transition-colors
-                        hover:text-text-primary
-                        focus-visible:outline-none
-                        focus-visible:ring-2
-                        focus-visible:ring-brand-purple
-                        focus-visible:ring-offset-2"
-                    >
-                        ← Back to search
-                    </Link>
+                <PageHeader>
+                    <BackToSearchLink />
+                </PageHeader>
 
+                <section className="mx-auto max-w-[1600px] px-5 py-8">
                     <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
                         <div>
                             <VideoPlayerSkeleton />
 
-                            <div className="mt-6 space-y-4">
+                            <div
+                                aria-hidden="true"
+                                className="mt-6 space-y-4"
+                            >
                                 <div className="h-8 w-3/4 animate-pulse rounded bg-skeleton" />
 
                                 <div className="flex items-center gap-3">
@@ -124,31 +137,15 @@ export default function VideoPage() {
     const relatedVideos =
         nextVideos?.filter((nextVideo) => nextVideo.id !== video.id) ?? [];
 
-
     const creatorInitial = creator?.screenname?.charAt(0).toUpperCase();
 
     return (
         <main className="min-h-screen bg-background text-text-primary">
-            <section className="mx-auto max-w-[1600px] px-5 py-8">
-                <Link
-                    to="/"
-                    className="
-                    mb-6
-                    inline-flex
-                    rounded-md
-                    text-sm
-                    font-medium
-                    text-text-secondary
-                    transition-colors
-                    hover:text-text-primary
-                    focus-visible:outline-none
-                    focus-visible:ring-2
-                    focus-visible:ring-brand-purple
-                    focus-visible:ring-offset-2
-                ">
-                    ← Back to search
-                </Link>
+            <PageHeader>
+                <BackToSearchLink />
+            </PageHeader>
 
+            <section className="mx-auto max-w-[1600px] px-5 py-8">
                 <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
                     <div>
                         <div className="overflow-hidden rounded-2xl bg-black">
@@ -166,9 +163,9 @@ export default function VideoPage() {
                                     {video.title}
                                 </h1>
 
-                                {creator ? (
-                                    <div className="mt-4 flex items-center gap-3">
-                                        {creator.avatar_360_url ? (
+                                <div className="mt-4 flex min-h-10 items-center gap-3">
+                                    {creator ? (
+                                        creator.avatar_360_url ? (
                                             <img
                                                 src={creator.avatar_360_url}
                                                 alt={creator.screenname}
@@ -179,27 +176,25 @@ export default function VideoPage() {
                                             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-skeleton text-sm font-semibold text-text-secondary">
                                                 {creatorInitial}
                                             </div>
-                                        )}
+                                        )
+                                    ) : (
+                                        <div
+                                            aria-hidden="true"
+                                            className="h-10 w-10 rounded-full bg-skeleton"
+                                        />
+                                    )}
 
-                                        <div>
-                                            <p className="text-sm font-medium text-text-primary">
-                                                {creator.screenname}
-                                            </p>
+                                    <div>
+                                        <p className="text-sm font-medium text-text-primary">
+                                            {creator?.screenname ?? video.channel}
+                                        </p>
 
-                                            <p className="text-sm text-text-secondary">
-                                                {video.channel} ·{" "}
-                                                {formatDate(video.created_time)} ·{" "}
-                                                {formatDuration(video.duration)}
-                                            </p>
-                                        </div>
+                                        <p className="text-sm text-text-secondary">
+                                            {video.channel} · {formatDate(video.created_time)} ·{" "}
+                                            {formatDuration(video.duration)}
+                                        </p>
                                     </div>
-                                ) : (
-                                    <p className="mt-2 text-sm text-text-secondary">
-                                        {video.channel} ·{" "}
-                                        {formatDate(video.created_time)} ·{" "}
-                                        {formatDuration(video.duration)}
-                                    </p>
-                                )}
+                                </div>
                             </div>
 
                             <LikeButton
