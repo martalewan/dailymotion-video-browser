@@ -10,7 +10,7 @@ import ErrorState from "../components/ErrorState";
 import PageHeader from "../components/PageHeader";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../components/VideoCardSkeleton";
-import { QUERY_STALE_TIME } from "../config/query";
+import { useVideoSearchQuery } from "../hooks/useVideoSearchQuery";
 
 export default function SearchPage() {
     const [query, setQuery] = useState("");
@@ -26,15 +26,7 @@ export default function SearchPage() {
         hasNextPage,
         error,
         refetch,
-    } = useInfiniteQuery({
-        queryKey: ["videos", debouncedQuery],
-        queryFn: ({ pageParam }) => searchVideos(debouncedQuery, pageParam),
-        initialPageParam: 1,
-        getNextPageParam: (lastPage) =>
-            lastPage.has_more ? lastPage.page + 1 : undefined,
-        enabled: debouncedQuery.trim().length > 0,
-        staleTime: QUERY_STALE_TIME,
-    });
+    } = useVideoSearchQuery(debouncedQuery);
 
     if (error) {
         return (

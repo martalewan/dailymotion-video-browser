@@ -1,7 +1,4 @@
 import { Link, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-
-import { getChannelVideos, getCreator, getVideo } from "../api/dailymotionApi";
 
 import EmptyState from "../components/EmptyState";
 import ErrorState from "../components/ErrorState";
@@ -17,7 +14,7 @@ import useLikedVideo from "../hooks/useLikedVideo";
 import { formatDate } from "../utils/formatDate";
 import { formatDescription } from "../utils/formatDescription";
 import { formatDuration } from "../utils/formatDuration";
-import { QUERY_STALE_TIME } from "../config/query";
+import { useVideoDetailsQuery } from "../hooks/useVideoDetailsQuery";
 
 function BackToSearchLink() {
     return (
@@ -45,42 +42,26 @@ export default function VideoPage() {
     const { isLiked, toggleLike } = useLikedVideo(id);
 
     const {
-        data: video,
-        isLoading,
+        video,
+        relatedVideos,
+        creator,
+        isLoadingVideo,
+        isLoadingRelatedVideos,
         error,
-        refetch,
-    } = useQuery({
-        queryKey: ["video", id],
-        queryFn: () => getVideo(id!),
-        enabled: Boolean(id),
-        staleTime: QUERY_STALE_TIME,
-    });
-
-    const { data: relatedVideosData, isLoading: isLoadingRelatedVideos } = useQuery({
-        queryKey: ["channel-videos", video?.channel],
-        queryFn: () => getChannelVideos(video!.channel),
-        enabled: Boolean(video?.channel),
-        staleTime: QUERY_STALE_TIME,
-    });
-
-    const { data: creator } = useQuery({
-        queryKey: ["creator", video?.owner],
-        queryFn: () => getCreator(video!.owner),
-        enabled: Boolean(video?.owner),
-        staleTime: QUERY_STALE_TIME,
-    });
+        refetchVideo,
+    } = useVideoDetailsQuery(id);
 
     if (error) {
         return (
             <ErrorState
                 message="Something went wrong while loading this video."
                 actionLabel="Try again"
-                onAction={() => refetch()}
+                onAction={() => refetchVideo()}
             />
         );
     }
 
-    if (isLoading) {
+    if (isLoadingVideo) {
         return (
             <main className="min-h-screen bg-background text-text-primary">
                 <PageHeader>
@@ -132,8 +113,9 @@ export default function VideoPage() {
 
     const description = formatDescription(video.description);
 
-    const relatedVideos =
-        relatedVideosData?.filter((relatedVideo) => relatedVideo.id !== video.id) ?? [];
+    const filteredRelatedVideos = relatedVideos.filter(
+        (relatedVideo) => relatedVideo.id !== video.id,
+    );
 
     const creatorInitial = creator?.screenname?.charAt(0).toUpperCase();
 
@@ -201,6 +183,7 @@ export default function VideoPage() {
                                 </div>
                             </div>
                         </div>
+
                         <VideoDescription
                             key={video.id}
                             description={description}
@@ -218,9 +201,9 @@ export default function VideoPage() {
                                     <RelatedVideoCardSkeleton key={index} />
                                 ))}
                             </div>
-                        ) : relatedVideos.length > 0 ? (
+                        ) : filteredRelatedVideos.length > 0 ? (
                             <div className="grid gap-4">
-                                {relatedVideos.map((nextVideo) => (
+                                {filteredRelatedVideos.map((nextVideo) => (
                                     <RelatedVideoCard
                                         key={nextVideo.id}
                                         video={nextVideo}
