@@ -1,19 +1,22 @@
 import { useState } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 
-import { searchVideos } from "../api/dailymotionApi";
 import useDebounce from "../hooks/useDebounce";
+import { useVideoSearchQuery } from "../hooks/useVideoSearchQuery";
 
 import EmptyState from "../components/EmptyState";
 import ErrorState from "../components/ErrorState";
 import PageHeader from "../components/PageHeader";
 import VideoCard from "../components/VideoCard";
 import VideoCardSkeleton from "../components/VideoCardSkeleton";
-import { useVideoSearchQuery } from "../hooks/useVideoSearchQuery";
 
 export default function SearchPage() {
-    const [query, setQuery] = useState("");
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const initialQuery = searchParams.get("q") ?? "";
+
+    const [query, setQuery] = useState(initialQuery);
 
     const debouncedQuery = useDebounce(query, 500);
 
@@ -27,6 +30,18 @@ export default function SearchPage() {
         error,
         refetch,
     } = useVideoSearchQuery(debouncedQuery);
+
+    function handleQueryChange(event: React.ChangeEvent<HTMLInputElement>) {
+        const nextQuery = event.target.value;
+
+        setQuery(nextQuery);
+
+        if (nextQuery.trim()) {
+            setSearchParams({ q: nextQuery });
+        } else {
+            setSearchParams({});
+        }
+    }
 
     if (error) {
         return (
@@ -64,7 +79,7 @@ export default function SearchPage() {
                         type="search"
                         value={query}
                         maxLength={100}
-                        onChange={(event) => setQuery(event.target.value)}
+                        onChange={handleQueryChange}
                         placeholder="Search videos..."
                         autoComplete="off"
                         className="
@@ -96,7 +111,8 @@ export default function SearchPage() {
                     {hasResults && (
                         <p
                             aria-live="polite"
-                            className="mt-2 text-sm text-text-secondary">
+                            className="mt-2 text-sm text-text-secondary"
+                        >
                             Showing {videos.length}
                             {totalVideos ? ` of ${totalVideos}` : ""} videos for{" "}
                             <span className="text-text-primary">
